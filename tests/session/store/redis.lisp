@@ -42,7 +42,7 @@
 
     (diag "2nd request")
     (destructuring-bind (status headers body)
-        (funcall app (generate-env "/" :cookies `(("lack.session" . ,session))))
+        (funcall app (generate-env "/" :cookies `(("session" . ,session))))
       (declare (ignore headers))
       (ok (eql status 200))
       (ok (equalp body '("Hello, you've been here for 2th times!")))))
@@ -71,7 +71,7 @@
         (ok (equalp body '("Hello, 深町英太郎! You've been here for 1th times!"))))
 
       (destructuring-bind (status headers body)
-          (funcall app (generate-env "/" :cookies `(("lack.session" . ,session))))
+          (funcall app (generate-env "/" :cookies `(("session" . ,session))))
         (declare (ignore headers))
         (ok (eql status 200))
         (ok (equalp body '("Hello, 深町英太郎! You've been here for 2th times!"))))))
@@ -106,19 +106,19 @@
 
       (sleep 2)
 
-      (let ((body (nth 2 (funcall app (generate-env "/" :cookies `(("lack.session" . ,session)))))))
+      (let ((body (nth 2 (funcall app (generate-env "/" :cookies `(("session" . ,session)))))))
         (ok (equalp body '("Hello, 深町英太郎! You've been here for 3th times!"))
             "Still the session is alive"))
 
       (sleep 2)
 
-      (let ((body (nth 2 (funcall app (generate-env "/" :cookies `(("lack.session" . ,session)))))))
+      (let ((body (nth 2 (funcall app (generate-env "/" :cookies `(("session" . ,session)))))))
         (ok (equalp body '("Hello, 深町英太郎! You've been here for 4th times!"))
             "Reset the expiration when accessed"))
 
       (sleep 3.5)
 
-      (let ((body (nth 2 (funcall app (generate-env "/" :cookies `(("lack.session" . ,session)))))))
+      (let ((body (nth 2 (funcall app (generate-env "/" :cookies `(("session" . ,session)))))))
         (ok (equalp body '("Hello, 深町英太郎! You've been here for 1th times!"))
             "Session has expired after 3 seconds since the last access"))))
 

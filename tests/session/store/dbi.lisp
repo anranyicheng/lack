@@ -48,7 +48,7 @@
 
     (diag "2nd request")
     (destructuring-bind (status headers body)
-        (funcall app (generate-env "/" :cookies `(("lack.session" . ,session))))
+        (funcall app (generate-env "/" :cookies `(("session" . ,session))))
       (declare (ignore headers))
       (ok (eql status 200))
       (ok (equalp body '("Hello, you've been here for 2th times!")))))
@@ -78,7 +78,7 @@
         (ok (equalp body '("Hello, 深町英太郎! You've been here for 1th times!"))))
 
       (destructuring-bind (status headers body)
-          (funcall app (generate-env "/" :cookies `(("lack.session" . ,session))))
+          (funcall app (generate-env "/" :cookies `(("session" . ,session))))
         (declare (ignore headers))
         (ok (eql status 200))
         (ok (equalp body '("Hello, 深町英太郎! You've been here for 2th times!"))))))
@@ -130,7 +130,7 @@
 
     (diag "2nd request")
     (destructuring-bind (status headers body)
-        (funcall app (generate-env "/" :cookies `(("lack.session" . ,session))))
+        (funcall app (generate-env "/" :cookies `(("session" . ,session))))
       (declare (ignore headers))
       (ok (eql status 200))
       (ok (equalp body '("Hello, you've been here for 2th times!"))))

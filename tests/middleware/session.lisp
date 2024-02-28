@@ -29,7 +29,7 @@
 
     (diag "2nd request")
     (destructuring-bind (status headers body)
-        (funcall app (generate-env "/" :cookies `(("lack.session" . ,session))))
+        (funcall app (generate-env "/" :cookies `(("session" . ,session))))
       (declare (ignore headers))
       (ok (eql status 200))
       (ok (equalp body '("Hello, you've been here for 2th times!"))))))
@@ -58,7 +58,7 @@
                  (ok (equalp body '("Hello, you've been here for 1th times!"))))))
 
     (diag "2nd request")
-    (funcall (funcall app (generate-env "/" :cookies `(("lack.session" . ,session))))
+    (funcall (funcall app (generate-env "/" :cookies `(("session" . ,session))))
              (lambda (response)
                (destructuring-bind (status headers body) response
                  (declare (ignore headers))
@@ -75,25 +75,25 @@
         session)
     ;; 1st
     (destructuring-bind (status headers body)
-        (funcall app (generate-env "/" :cookies '(("lack.session" . nil))))
+        (funcall app (generate-env "/" :cookies '(("session" . nil))))
       (ok (eql status 200) "status")
       (ok (getf headers :set-cookie)
           "Set-Cookie header exists")
       (setf session
-            (ppcre:scan-to-strings "(?<=lack.session=)[^;]+" (getf headers :set-cookie "")))
+            (ppcre:scan-to-strings "(?<=session=)[^;]+" (getf headers :set-cookie "")))
       (ok (typep session 'string)
           "Set-Cookie header value is valid")
       (ok (equalp body '("hi")) "body"))
     ;; 2nd
     (destructuring-bind (status headers body)
-        (funcall app (generate-env "/" :cookies `(("lack.session" . ,session))))
+        (funcall app (generate-env "/" :cookies `(("session" . ,session))))
       (ok (eql status 200) "status")
       (ng (getf headers :set-cookie)
           "Set-Cookie header doesn't exist")
       (ok (equalp body '("hi")) "body"))
     ;; invalid lack.session
     (destructuring-bind (status headers body)
-        (funcall app (generate-env "/" :cookies '(("lack.session" . "<invalid session here>"))))
+        (funcall app (generate-env "/" :cookies '(("session" . "<invalid session here>"))))
       (ok (eql status 200) "status")
       (ok (getf headers :set-cookie)
           "Set-Cookie header exists")
@@ -101,7 +101,7 @@
 
     ;; expires
     (destructuring-bind (status headers body)
-        (funcall app (generate-env "/expire" :cookies `(("lack.session" . ,session))))
+        (funcall app (generate-env "/expire" :cookies `(("session" . ,session))))
       (ok (eql status 200) "status")
       (ok (getf headers :set-cookie)
           "Set-Cookie header exists")
@@ -111,7 +111,7 @@
 
     ;; with expired session
     (destructuring-bind (status headers body)
-        (funcall app (generate-env "/" :cookies `(("lack.session" . ,session))))
+        (funcall app (generate-env "/" :cookies `(("session" . ,session))))
       (ok (eql status 200) "status")
       (ok (getf headers :set-cookie)
           "Set-Cookie header exists")
@@ -138,10 +138,10 @@
                  (destructuring-bind (status headers body) result
                    (declare (ignore status body))
                    (setf session
-                         (ppcre:scan-to-strings "(?<=lack.session=)[^;]+"
+                         (ppcre:scan-to-strings "(?<=session=)[^;]+"
                                                 (getf headers :set-cookie ""))))))
       ;; Make sure it expires when expiration is set in a delayed response.
-      (funcall (funcall app (generate-env "/delayed-expire" :cookies `(("lack.session" . ,session))))
+      (funcall (funcall app (generate-env "/delayed-expire" :cookies `(("session" . ,session))))
                (lambda (result)
                  (destructuring-bind (status headers body) result
                    (declare (ignore status body))
@@ -167,7 +167,7 @@
         (declare (ignore status body))
         (ok (typep (getf headers :set-cookie) 'string)))))
 
-  (testing "cookie-key other than lack.session="
+  (testing "cookie-key other than session="
     (let ((app (builder
                 (:session :state (lack.session.state.cookie:make-cookie-state
                                   :cookie-key "_myapp_cookie"))

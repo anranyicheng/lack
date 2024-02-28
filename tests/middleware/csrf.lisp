@@ -56,7 +56,7 @@
         (ok (eql status 400))
         (ok (equalp body '("Bad Request: invalid CSRF token")))
         (ok (ppcre:scan
-             "^lack.session=.+; path=/; expires="
+             "^session=.+; path=/; expires="
              (getf headers :set-cookie)))
 
         (setf session (parse-lack-session headers)))

@@ -167,7 +167,7 @@
         (declare (ignore status body))
         (ok (typep (getf headers :set-cookie) 'string)))))
 
-  (testing "cookie-key other than session="
+  (testing "cookie-key other than lack.session="
     (let ((app (builder
                 (:session :state (lack.session.state.cookie:make-cookie-state
                                   :cookie-key "_myapp_cookie"))

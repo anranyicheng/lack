@@ -65,7 +65,7 @@
       (destructuring-bind (status headers body)
           (funcall app (generate-env "/"
                                      :headers
-                                     `(("cookie" . ,(format nil "lack.session=~A" session)))))
+                                     `(("cookie" . ,(format nil "session=~A" session)))))
         (ok (eql status 200) "Status is 200")
         (ok (ppcre:scan "^text/html" (getf headers :content-type))
             "Content-Type is text/html")
@@ -79,7 +79,7 @@
           (funcall app (generate-env "/"
                                      :method :post
                                      :headers
-                                     `(("cookie" . ,(format nil "lack.session=~A" session)))))
+                                     `(("cookie" . ,(format nil "session=~A" session)))))
         (ok (eql status 400) "Status is 400")
         (ok (ppcre:scan "^text/plain" (getf headers :content-type))
             "Content-Type is text/plain")
@@ -90,7 +90,7 @@
           (funcall app (generate-env "/"
                                      :method :post
                                      :headers
-                                     `(("cookie" . ,(format nil "lack.session=~A" session)))))
+                                     `(("cookie" . ,(format nil "session=~A" session)))))
         (ok (eql status 400) "Status is 400")
         (ok (ppcre:scan "^text/plain" (getf headers :content-type))
             "Content-Type is text/plain")
@@ -100,7 +100,7 @@
       (destructuring-bind (status headers body)
           (funcall app (generate-env "/"
                                      :method :post
-                                     :cookies `(("lack.session" . ,session))
+                                     :cookies `(("session" . ,session))
                                      :content
                                      `(("name" . "Eitaro Fukamachi")
                                        ("_csrf_token" . ,csrf-token))))
@@ -135,7 +135,7 @@
                                    :method :post
                                    :content `(("name" . "Eitaro Fukamachi")
                                               ("_csrf_token" . ,csrf-token))
-                                   :cookies `(("lack.session" . ,session))))
+                                   :cookies `(("session" . ,session))))
       (declare (ignore headers body))
       (ok (eql status 200)))
 
@@ -145,7 +145,7 @@
                                    :method :post
                                    :content `(("name" . "Eitaro Fukamachi")
                                               ("_csrf_token" . ,csrf-token))
-                                   :cookies `(("lack.session" . ,session))))
+                                   :cookies `(("session" . ,session))))
       (ok (eql status 400))
       (ok (equal (getf headers :content-type) "text/plain"))
       (ok (equalp body '("Bad Request: invalid CSRF token"))))))
@@ -177,7 +177,7 @@
                                    :method :post
                                    :content `(("name" . "Eitaro Fukamachi")
                                               ("test_input_name" . "invalid token"))
-                                   :cookies `(("lack.session" . ,session))))
+                                   :cookies `(("session" . ,session))))
       (ok (eql status 400) "Status is 400")
       (ok (ppcre:scan "^text/plain" (getf headers :content-type))
           "Content-Type is text/plain")
@@ -189,6 +189,6 @@
                                    :method :post
                                    :content `(("name" . "Eitaro Fukamachi")
                                               ("test_input_name" . ,csrf-token))
-                                   :cookies `(("lack.session" . ,session))))
+                                   :cookies `(("session" . ,session))))
       (declare (ignore headers body))
       (ok (eql status 200)))))
